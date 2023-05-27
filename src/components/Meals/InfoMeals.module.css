@@ -1,0 +1,22 @@
+.container {
+  background-color: rgb(104, 93, 93);
+  max-width: 60rem;
+  width: 90%;
+  margin: 0 auto;
+  text-align: center;
+  margin-top: -13rem;
+  position: relative;
+}
+
+.container h3 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: 1px;
+}
+
+.container p {
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  letter-spacing: 1.5px;
+  word-spacing: 1px;
+}

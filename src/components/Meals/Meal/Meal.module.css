@@ -1,0 +1,26 @@
+.meal {
+  display: flex;
+  justify-content: space-between;
+}
+.meal:not(:last-child) {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 0.5px solid rgb(220, 214, 214);
+}
+
+.meal__name {
+  font-weight: bold;
+  font-size: 1.8rem;
+  color: brown;
+}
+
+.meal__description {
+  font-size: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.meal__price {
+  font-weight: bold;
+  font-size: 1.8rem;
+  color: brown;
+}

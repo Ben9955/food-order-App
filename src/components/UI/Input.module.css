@@ -1,0 +1,19 @@
+.input {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.input input {
+  margin-left: 1rem;
+  width: 3rem;
+  text-align: center;
+  border: 1px solid gray;
+  border-radius: 4px;
+  outline: none;
+}
+
+.input label {
+  font-size: 1.4rem;
+  font-weight: 600;
+}

@@ -1,0 +1,25 @@
+.meals {
+  margin-top: 3rem;
+  max-width: 80rem;
+  width: 90%;
+  color: #666;
+  margin-bottom: 5rem;
+  animation: meals_move_up 1.5s;
+}
+
+.meals ul {
+  list-style: none;
+}
+
+@keyframes meals_move_up {
+  0% {
+    transform: translateY(10rem);
+  }
+
+  80% {
+    transform: translateY(-1rem);
+  }
+  100% {
+    transform: translateY(0rem);
+  }
+}
