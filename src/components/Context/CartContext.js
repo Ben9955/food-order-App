@@ -5,9 +5,11 @@ export const CartContext = React.createContext({
   totalAmount: 0,
   addItem: () => {},
   removeItem: () => {},
+  clearCart: () => {},
 });
 
-const DEFAULT_VALUE = { items: [], totalAmount: 0 };
+const DEFAULT_CART_STATE = { items: [], totalAmount: 0 };
+
 const cartReducer = (state, action) => {
   if (action.type === "ADD") {
     const updatedTotalAmount =
@@ -63,10 +65,15 @@ const cartReducer = (state, action) => {
       };
     }
   }
+
+  if (action.type === "CLEAR") return DEFAULT_CART_STATE;
 };
 
 const CartProvider = (props) => {
-  const [cartState, dispachCartAction] = useReducer(cartReducer, DEFAULT_VALUE);
+  const [cartState, dispachCartAction] = useReducer(
+    cartReducer,
+    DEFAULT_CART_STATE
+  );
 
   const addItem = (item) => {
     dispachCartAction({ type: "ADD", item: item });
@@ -76,11 +83,16 @@ const CartProvider = (props) => {
     dispachCartAction({ type: "REMOVE", id: id });
   };
 
+  const clearCart = (id) => {
+    dispachCartAction({ type: "CLEAR" });
+  };
+
   const cartContext = {
     items: cartState.items,
     totalAmount: cartState.totalAmount,
     addItem: addItem,
     removeItem: removeItem,
+    clearCart,
   };
   return (
     <CartContext.Provider value={cartContext}>

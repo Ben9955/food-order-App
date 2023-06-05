@@ -1,36 +1,63 @@
 import Meal from "./Meal/Meal";
 import Card from "../UI/Card";
 import style from "./MealsAvailable.module.css";
-
-const DUMMY_MEALS = [
-  {
-    id: "m1",
-    name: "Sushi",
-    description: "Finest fish and veggies",
-    price: 22.99,
-  },
-  {
-    id: "m2",
-    name: "Schnitzel",
-    description: "A german specialty!",
-    price: 16.5,
-  },
-  {
-    id: "m3",
-    name: "Barbecue Burger",
-    description: "American, raw, meaty",
-    price: 12.99,
-  },
-  {
-    id: "m4",
-    name: "Green Bowl",
-    description: "Healthy...and green...",
-    price: 18.99,
-  },
-];
+// import useHttpRequest from "../../http-request/httpRequest";
+import { useEffect, useState } from "react";
 
 const MealsAvailable = (props) => {
-  const meals = DUMMY_MEALS.map((meal, index) => (
+  const [mealsList, setMealsList] = useState([]);
+  const [isLoading, setIsloading] = useState(false);
+  const [fetchError, setFetchError] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "https://react-http-79573-default-rtdb.firebaseio.com/meals.json"
+        );
+        setIsloading(true);
+
+        if (!response.ok) throw new Error("Problem with the server");
+        const data = await response.json();
+
+        const mealsData = [];
+        for (const key of Object.keys(data)) {
+          mealsData.push({
+            id: key,
+            name: data[key].name,
+            description: data[key].description,
+            price: data[key].price,
+          });
+        }
+
+        setMealsList(mealsData);
+        setIsloading(false);
+      } catch (err) {
+        setFetchError(err.message);
+        setIsloading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <section className={style.MealsLoading}>
+        <p>is Loading...</p>
+      </section>
+    );
+  }
+
+  if (fetchError) {
+    return (
+      <section className={style.MealsError}>
+        <p>{fetchError}</p>
+      </section>
+    );
+  }
+
+  const meals = mealsList.map((meal, index) => (
     <Meal
       name={meal.name}
       price={meal.price}

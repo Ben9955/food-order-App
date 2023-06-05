@@ -7,6 +7,20 @@
   animation: meals_move_up 1.5s;
 }
 
+.MealsLoading {
+  margin-top: 3rem;
+  text-align: center;
+  color: #eee;
+  font-size: 2rem;
+}
+
+.MealsError {
+  margin-top: 3rem;
+  text-align: center;
+  color: rgb(253, 148, 148);
+  font-size: 2rem;
+}
+
 .meals ul {
   list-style: none;
 }

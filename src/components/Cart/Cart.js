@@ -2,10 +2,14 @@ import Card from "../UI/Card";
 import style from "./Cart.module.css";
 import CartItem from "./CartItem";
 import { CartContext } from "../Context/CartContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Overlay from "../UI/overlay";
+import Checkout from "./Checkout";
 
 const Cart = ({ onCloseClick }) => {
+  const [isCheckout, setIsCheckout] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [didSubmit, setDidSubmit] = useState(false);
   const cartCtx = useContext(CartContext);
   const totalAmount = cartCtx.totalAmount.toFixed(2);
 
@@ -15,6 +19,26 @@ const Cart = ({ onCloseClick }) => {
 
   const removeItemHandler = (id) => {
     cartCtx.removeItem(id);
+  };
+
+  const orderHandler = (e) => {
+    setIsCheckout(true);
+  };
+
+  const submitOrderHandler = async (userData) => {
+    setIsSubmitting(true);
+    const response = await fetch(
+      "https://react-http-79573-default-rtdb.firebaseio.com/orders.json",
+      {
+        method: "POST",
+        body: JSON.stringify({ user: userData, orderedItems: cartCtx.items }),
+      }
+    );
+
+    setIsSubmitting(false);
+    setDidSubmit(true);
+
+    cartCtx.clearCart();
   };
 
   const cartItems = cartCtx.items.map((item) => (
@@ -28,17 +52,47 @@ const Cart = ({ onCloseClick }) => {
     />
   ));
 
+  const actions = (
+    <div className={style.buttons}>
+      <button onClick={onCloseClick} className={style.close}>
+        Close
+      </button>
+      <button onClick={orderHandler} className={style.order}>
+        Order
+      </button>
+    </div>
+  );
+
+  const cartModalContent = (
+    <>
+      {cartItems}
+      <div className={style.amount}>
+        <h3>Total Amount</h3>
+        <h3>${totalAmount}</h3>
+      </div>
+      {isCheckout && (
+        <Checkout onConfirm={submitOrderHandler} onCancel={onCloseClick} />
+      )}
+      {!isCheckout && actions}
+    </>
+  );
+
+  const isSubmittingModalContent = <p> Sending order data....</p>;
+
+  const didSubmitModalContent = (
+    <div className={style.submitted}>
+      <p>Successfully sent the order!</p>
+      <button onClick={onCloseClick} className={style.close}>
+        Close
+      </button>
+    </div>
+  );
   return (
     <Overlay>
       <Card className={style.cart}>
-        {cartItems}
-        <div className={style.amount}>
-          <h3>Total Amount</h3>
-          <h3>${totalAmount}</h3>
-        </div>
-        <button onClick={onCloseClick} className={style.close}>
-          Close
-        </button>
+        {!isSubmitting && !didSubmit && cartModalContent}
+        {isSubmitting && isSubmittingModalContent}
+        {didSubmit && !isSubmitting && didSubmitModalContent}
       </Card>
     </Overlay>
   );
